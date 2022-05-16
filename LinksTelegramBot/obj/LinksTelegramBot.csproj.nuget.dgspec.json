@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Наталья\\source\\repos\\TelegramBotLinks\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj": {}
+    "C:\\Users\\Наталья\\source\\repos\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Наталья\\source\\repos\\TelegramBotLinks\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj": {
+    "C:\\Users\\Наталья\\source\\repos\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Наталья\\source\\repos\\TelegramBotLinks\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj",
+        "projectUniqueName": "C:\\Users\\Наталья\\source\\repos\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj",
         "projectName": "LinksTelegramBot",
-        "projectPath": "C:\\Users\\Наталья\\source\\repos\\TelegramBotLinks\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj",
+        "projectPath": "C:\\Users\\Наталья\\source\\repos\\LinksTelegramBot\\LinksTelegramBot\\LinksTelegramBot.csproj",
         "packagesPath": "C:\\Users\\Наталья\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Наталья\\source\\repos\\TelegramBotLinks\\LinksTelegramBot\\LinksTelegramBot\\obj\\",
+        "outputPath": "C:\\Users\\Наталья\\source\\repos\\LinksTelegramBot\\LinksTelegramBot\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -60,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }
