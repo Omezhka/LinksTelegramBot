@@ -1,2 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿namespace LinksTelegramBot
+{
+    class Program
+    {
+       static void Main()
+        {
+            Entry entry = new();
+            entry.Run();
+            Console.ReadLine();
+            entry.Stop();
+        }
+    }
+}
