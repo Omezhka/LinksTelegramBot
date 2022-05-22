@@ -4,10 +4,7 @@
     {
         public CommandHandler(IChat chat,IStorage storage)
         {
-            chat.OnNewChatMessage += () =>
-            {
-
-            };           
+            chat.NewChatMessage += chat.OnNewChatMessage;           
         }
         string RecognizeCommand(string message) { return message/*commandName*/; }
     }
