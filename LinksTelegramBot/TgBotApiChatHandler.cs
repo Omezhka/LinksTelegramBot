@@ -10,15 +10,17 @@ namespace LinksTelegramBot
     {
         public event IChat.NewChatMessageDelegate? NewChatMessage;
 
-        void IChat.OnNewChatMessage(object source, EventArgs eventArgs)
+        void IChat.OnNewChatMessage(ITelegramBotClient botClient, Update update)
         {
             if (NewChatMessage != null)
-                NewChatMessage(this, EventArgs.Empty);
+                NewChatMessage(botClient, update);
+            Console.WriteLine(update.Message.Text);
         }
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            IChat.OnNewChatMessage();
+            IChat chat = new TgBotApiChatHandler();
+            chat.OnNewChatMessage(botClient, update);
         }
 
         private static Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
@@ -65,7 +67,8 @@ namespace LinksTelegramBot
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
         }
 
         void IChat.PostMessageToChat()
