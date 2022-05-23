@@ -8,38 +8,51 @@ namespace LinksTelegramBot
     {
         public CommandHandler(IChat chat,IStorage storage)
         {
-            chat.NewChatMessage += OnNewChatMessage;
-
             Console.WriteLine("CommandHadler awake");
-                   
-        }
 
-        private void OnNewChatMessage(object sender, NewMessageEventArgs newMessageEventArgs)
-        {
-            Console.WriteLine($"Receive message type from CommandHandler: {newMessageEventArgs.Message.Type}");
-            if (newMessageEventArgs.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
-                return;
-           // var action = RecognizeCommand(newMessageEventArgs.Message);
-            var action = newMessageEventArgs.Message.Text!.Split(' ')[0];
-            if (action[0] == '/' && action[1] != '/')
+            //chat.NewChatMessage += OnNewChatMessage;
+            chat.NewChatMessage += (object sender, NewMessageEventArgs newMessageEventArgs) =>
             {
-                ICommand returnCommand = CommandFactory.CreateCommand(action);
-                Console.WriteLine(returnCommand.Execute());
-            }
-            else Console.WriteLine($"this is message {action}");
+                Console.WriteLine($"Receive message type from CommandHandler: {newMessageEventArgs.Message.Type}");
+                if (newMessageEventArgs.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
+                    return;
+                
+                try
+                { 
+                    var action = RecognizeCommand(newMessageEventArgs.Message);
+                    ICommand returnCommand = CommandFactory.CreateCommand(action);
+                    Console.WriteLine(returnCommand.Execute());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    //chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.Message);
+                    Usage(newMessageEventArgs.BotClient, newMessageEventArgs.Message);
+                }          
+            };                      
         }
 
-       
-        string RecognizeCommand(Message message) {
+        static string RecognizeCommand(Message message) {
             
             var action = message.Text!.Split(' ')[0];
             return action switch
             {
-                "/" => message.Text, 
+                "/store_link" => message.Text, 
+                "/get_links" => message.Text,
                 _ => throw new ArgumentException(message: "this is just message", message.Text)
             };
         }
+        static async Task<Message> Usage(ITelegramBotClient botClient, Message message)
+        {
+            const string usage = "Usage:\n" +
+                                 "/store_link - сохранение URL-ссылки в персональную записную книжку\n" +
+                                 "/get_links - вывод списка запомненных ссылок\n";
+                                
 
-        
+            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
+                                                        text: usage,
+                                                        replyMarkup: new ReplyKeyboardRemove());
+        }
+
     }
 }

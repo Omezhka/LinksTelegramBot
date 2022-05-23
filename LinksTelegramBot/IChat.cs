@@ -8,10 +8,11 @@ namespace LinksTelegramBot
     {
         //delegate void NewChatMessageDelegate(object sender, EventArgs eventArgs);
         event EventHandler<NewMessageEventArgs> NewChatMessage;
-       // void OnNewChatMessage(object sender, EventArgs eventArgs);
-          
-        void NewChatMessageReceiver();
-        void PostMessageToChat();
+        // void OnNewChatMessage(object sender, EventArgs eventArgs);
+
+        // void NewChatMessageReceiver();
+        Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken);
+        Task<Message> PostMessageToChat(ITelegramBotClient botClient, Message message);
         void Start();
         void Stop();
     }

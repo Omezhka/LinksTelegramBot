@@ -3,34 +3,25 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace LinksTelegramBot
 {
     public class TgBotApiChatHandler : IChat
     {
-
-      //  event EventHandler<NewMessageEventArgs> IChat.NewChatMessage;
-
         public event EventHandler<NewMessageEventArgs> NewChatMessage;
-
-
-        //void IChat.OnNewChatMessage(object sender, EventArgs eventArgs)
-        //{
-        //    if (NewChatMessage != null)
-        //        NewChatMessage(this,new EventArgs());
-        //   // Console.WriteLine($"from TgBotApiChatHandler {message.Text}");
-        //    // NewChatMessage.Invoke(botClient,message);
-        //}
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-
             NewMessageEventArgs eventArgs = new()
             {
-                Message = update.Message
+                Message = update.Message,
+                BotClient = botClient,
             };
 
             OnNewMessage(eventArgs);
+
+            //PostMessageToChat(botClient, update.Message);
 
         }
 
@@ -58,11 +49,6 @@ namespace LinksTelegramBot
             return Task.CompletedTask;
         }
 
-        public async Task PostMessageToChat()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Start()
         {
 
@@ -88,16 +74,30 @@ namespace LinksTelegramBot
             cts.Cancel();
         }
 
-        void IChat.PostMessageToChat()
+        public async Task<Message> PostMessageToChat(ITelegramBotClient botClient, Message message)
         {
-            throw new NotImplementedException();
+            //const string usage = "Usage:\n" +
+            //                     "/inline   - send inline keyboard\n" +
+            //                     "/keyboard - send custom keyboard\n" +
+            //                     "/remove   - remove custom keyboard\n" +
+            //                     "/photo    - send a photo\n" +
+            //                     "/request  - request location or contact";
+            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
+                                                        text: message.Text,
+                                                        replyMarkup: new ReplyKeyboardRemove());
         }
-
-      
-
-        public void NewChatMessageReceiver()
+        public static async Task<Message> Usage(ITelegramBotClient botClient, Message message)
         {
-            throw new NotImplementedException();
+            const string usage = "Usage:\n" +
+                                 "/inline   - send inline keyboard\n" +
+                                 "/keyboard - send custom keyboard\n" +
+                                 "/remove   - remove custom keyboard\n" +
+                                 "/photo    - send a photo\n" +
+                                 "/request  - request location or contact";
+
+            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
+                                                        text: usage,
+                                                        replyMarkup: new ReplyKeyboardRemove());
         }
     }
 }
