@@ -8,19 +8,36 @@ namespace LinksTelegramBot
 {
     public class TgBotApiChatHandler : IChat
     {
-        public event IChat.NewChatMessageDelegate? NewChatMessage;
 
-        void IChat.OnNewChatMessage(ITelegramBotClient botClient, Update update)
-        {
-            if (NewChatMessage != null)
-                NewChatMessage(botClient, update);
-            Console.WriteLine(update.Message.Text);
-        }
+      //  event EventHandler<NewMessageEventArgs> IChat.NewChatMessage;
+
+        public event EventHandler<NewMessageEventArgs> NewChatMessage;
+
+
+        //void IChat.OnNewChatMessage(object sender, EventArgs eventArgs)
+        //{
+        //    if (NewChatMessage != null)
+        //        NewChatMessage(this,new EventArgs());
+        //   // Console.WriteLine($"from TgBotApiChatHandler {message.Text}");
+        //    // NewChatMessage.Invoke(botClient,message);
+        //}
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            IChat chat = new TgBotApiChatHandler();
-            chat.OnNewChatMessage(botClient, update);
+
+            NewMessageEventArgs eventArgs = new()
+            {
+                Message = update.Message
+            };
+
+            OnNewMessage(eventArgs);
+
+        }
+
+        protected virtual void OnNewMessage(NewMessageEventArgs e) {
+            EventHandler<NewMessageEventArgs> eventHandler = NewChatMessage;
+            if (eventHandler != null)
+                eventHandler(this, e);
         }
 
         private static Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)

@@ -3,14 +3,12 @@
     public class CommandFactory
     {
         public static ICommand CreateCommand(string commandName) {
-            switch (commandName)
+            return commandName switch
             {
-                case "store_link":
-                    return new StoreLinkCommand();                  
-                case "get_links":
-                    return new GetLinksCommand();
-                default: throw new ArgumentException(message: "Non-existent command", commandName);
-            }
+                "/store_link" => new StoreLinkCommand(),
+                "/get_links" => new GetLinksCommand(),
+                _ => throw new ArgumentException(message: "Non-existent command", commandName),
+            };
         }
     }
 }

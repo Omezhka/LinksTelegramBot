@@ -6,9 +6,9 @@ namespace LinksTelegramBot
 {
     public interface IChat
     {
-        delegate void NewChatMessageDelegate(ITelegramBotClient botClient,Update update);
-        event NewChatMessageDelegate NewChatMessage;
-        void OnNewChatMessage(ITelegramBotClient botClient, Update update);
+        //delegate void NewChatMessageDelegate(object sender, EventArgs eventArgs);
+        event EventHandler<NewMessageEventArgs> NewChatMessage;
+       // void OnNewChatMessage(object sender, EventArgs eventArgs);
           
         void NewChatMessageReceiver();
         void PostMessageToChat();

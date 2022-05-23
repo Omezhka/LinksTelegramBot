@@ -1,4 +1,7 @@
-﻿public static partial class Config
+﻿namespace LinksTelegramBot
 {
-    public readonly static string botToken = "";
+    public static partial class Config
+    {
+        public readonly static string botToken = "";
+    }
 }

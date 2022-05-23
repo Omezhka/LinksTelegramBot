@@ -6,8 +6,9 @@
         {
             IChat chat = new TgBotApiChatHandler();
             IStorage storage = new MemoryStorage();
-            CommandHandler commandHandler = new(chat,storage);
             chat.Start();
+            CommandHandler commandHandler = new(chat,storage);
+           
         }
         public void Stop()
         {
