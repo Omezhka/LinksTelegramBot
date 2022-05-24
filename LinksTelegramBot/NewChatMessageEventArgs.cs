@@ -7,7 +7,6 @@ namespace LinksTelegramBot
     {
         public Message? Message { get; set; }
         public ITelegramBotClient? BotClient  {get;set;}
-
-        public ChatId ChatId { get; set; }
+        public ChatId? ChatId { get; set; }
     }
 }

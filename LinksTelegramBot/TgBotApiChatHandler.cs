@@ -9,7 +9,7 @@ namespace LinksTelegramBot
 {
     public class TgBotApiChatHandler : IChat
     {
-        public event EventHandler<NewChatMessageEventArgs> NewChatMessage;
+        public event EventHandler<NewChatMessageEventArgs>? NewChatMessage;
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
@@ -21,15 +21,19 @@ namespace LinksTelegramBot
             };
 
             OnNewChatMessage(eventArgs);
-
-            //PostMessageToChat(botClient, update.Message);
-
         }
 
         protected virtual void OnNewChatMessage(NewChatMessageEventArgs e) {
-            EventHandler<NewChatMessageEventArgs> eventHandler = NewChatMessage;
+            EventHandler<NewChatMessageEventArgs>? eventHandler = NewChatMessage;
             if (eventHandler != null)
                 eventHandler(this, e);
+        }
+
+        public async Task<Message> PostMessageToChat(ITelegramBotClient botClient, ChatId chatId, string message)
+        {
+            return await botClient.SendTextMessageAsync(chatId: chatId,
+                                                        text: message,//message.Text,
+                                                        replyMarkup: new ReplyKeyboardRemove());
         }
 
         public static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -46,7 +50,6 @@ namespace LinksTelegramBot
 
         public void Start()
         {
-
             var bot = new TelegramBotClient(Config.botToken);
             Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);
             var cts = new CancellationTokenSource();
@@ -66,13 +69,6 @@ namespace LinksTelegramBot
         {
             var cts = new CancellationTokenSource();
             cts.Cancel();
-        }
-
-        public async Task<Message> PostMessageToChat(ITelegramBotClient botClient, ChatId chatId, string message)
-        {
-            return await botClient.SendTextMessageAsync(chatId: chatId,
-                                                        text: message,//message.Text,
-                                                        replyMarkup: new ReplyKeyboardRemove());
         }
     }
 }

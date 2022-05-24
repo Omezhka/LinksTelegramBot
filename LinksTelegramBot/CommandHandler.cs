@@ -1,6 +1,4 @@
-﻿using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
+﻿using Telegram.Bot.Types;
 
 namespace LinksTelegramBot
 {
@@ -11,12 +9,12 @@ namespace LinksTelegramBot
             Console.WriteLine("CommandHadler awake");
 
             //chat.NewChatMessage += OnNewChatMessage;
-            chat.NewChatMessage += (object sender, NewChatMessageEventArgs newMessageEventArgs) =>
+            chat.NewChatMessage += (object? sender, NewChatMessageEventArgs newMessageEventArgs) =>
             {
                 Console.WriteLine($"Receive message type from CommandHandler: {newMessageEventArgs.Message.Type}");
                 if (newMessageEventArgs.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
                     return;
-                
+               
                 try
                 { 
                     var action = RecognizeCommand(newMessageEventArgs.Message);
@@ -29,33 +27,19 @@ namespace LinksTelegramBot
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    //chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.Message);
-                    Usage(newMessageEventArgs.BotClient, newMessageEventArgs.Message);
+                    if (newMessageEventArgs.Message.Text[0] != '/') 
+                        chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.ChatId, $"Я увидел текст: {newMessageEventArgs.Message.Text}");
+                    else CommandFactory.Usage(newMessageEventArgs.BotClient, newMessageEventArgs.Message);
                 }          
             };                      
         }
 
-        static string RecognizeCommand(Message message) {
-            
+        static string RecognizeCommand(Message message) 
+        {  
             var action = message.Text!.Split(' ')[0];
-            return action switch
-            {
-                "/store_link" => message.Text, 
-                "/get_links" => message.Text,
-                _ => throw new ArgumentException(message: "this is just message", message.Text)
-            };
+            if (action[0] == '/' && action[1] != '/')
+                return message.Text;       
+            else throw new ArgumentException(message: "this is just message", message.Text);     
         }
-        static async Task<Message> Usage(ITelegramBotClient botClient, Message message)
-        {
-            const string usage = "Usage:\n" +
-                                 "/store_link - сохранение URL-ссылки в персональную записную книжку\n" +
-                                 "/get_links - вывод списка запомненных ссылок\n";
-                                
-
-            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                        text: usage,
-                                                        replyMarkup: new ReplyKeyboardRemove());
-        }
-
     }
 }
