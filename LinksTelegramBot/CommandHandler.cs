@@ -11,7 +11,7 @@ namespace LinksTelegramBot
             Console.WriteLine("CommandHadler awake");
 
             //chat.NewChatMessage += OnNewChatMessage;
-            chat.NewChatMessage += (object sender, NewMessageEventArgs newMessageEventArgs) =>
+            chat.NewChatMessage += (object sender, NewChatMessageEventArgs newMessageEventArgs) =>
             {
                 Console.WriteLine($"Receive message type from CommandHandler: {newMessageEventArgs.Message.Type}");
                 if (newMessageEventArgs.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
@@ -21,7 +21,10 @@ namespace LinksTelegramBot
                 { 
                     var action = RecognizeCommand(newMessageEventArgs.Message);
                     ICommand returnCommand = CommandFactory.CreateCommand(action);
+                    var resultCommand = returnCommand.Execute();
                     Console.WriteLine(returnCommand.Execute());
+
+                    chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.ChatId, resultCommand);
                 }
                 catch (Exception e)
                 {

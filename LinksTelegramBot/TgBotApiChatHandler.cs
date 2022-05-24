@@ -9,32 +9,27 @@ namespace LinksTelegramBot
 {
     public class TgBotApiChatHandler : IChat
     {
-        public event EventHandler<NewMessageEventArgs> NewChatMessage;
+        public event EventHandler<NewChatMessageEventArgs> NewChatMessage;
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            NewMessageEventArgs eventArgs = new()
+            NewChatMessageEventArgs eventArgs = new()
             {
                 Message = update.Message,
                 BotClient = botClient,
+                ChatId = update.Message.Chat.Id
             };
 
-            OnNewMessage(eventArgs);
+            OnNewChatMessage(eventArgs);
 
             //PostMessageToChat(botClient, update.Message);
 
         }
 
-        protected virtual void OnNewMessage(NewMessageEventArgs e) {
-            EventHandler<NewMessageEventArgs> eventHandler = NewChatMessage;
+        protected virtual void OnNewChatMessage(NewChatMessageEventArgs e) {
+            EventHandler<NewChatMessageEventArgs> eventHandler = NewChatMessage;
             if (eventHandler != null)
                 eventHandler(this, e);
-        }
-
-        private static Task UnknownUpdateHandlerAsync(ITelegramBotClient botClient, Update update)
-        {
-            Console.WriteLine($"Unknown update type: {update.Type}");
-            return Task.CompletedTask;
         }
 
         public static Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -65,7 +60,6 @@ namespace LinksTelegramBot
                     },
                     cancellationToken: cts.Token
                 );
-            // NewChatMessageReceiver();
         }
 
         public void Stop()
@@ -74,29 +68,10 @@ namespace LinksTelegramBot
             cts.Cancel();
         }
 
-        public async Task<Message> PostMessageToChat(ITelegramBotClient botClient, Message message)
+        public async Task<Message> PostMessageToChat(ITelegramBotClient botClient, ChatId chatId, string message)
         {
-            //const string usage = "Usage:\n" +
-            //                     "/inline   - send inline keyboard\n" +
-            //                     "/keyboard - send custom keyboard\n" +
-            //                     "/remove   - remove custom keyboard\n" +
-            //                     "/photo    - send a photo\n" +
-            //                     "/request  - request location or contact";
-            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                        text: message.Text,
-                                                        replyMarkup: new ReplyKeyboardRemove());
-        }
-        public static async Task<Message> Usage(ITelegramBotClient botClient, Message message)
-        {
-            const string usage = "Usage:\n" +
-                                 "/inline   - send inline keyboard\n" +
-                                 "/keyboard - send custom keyboard\n" +
-                                 "/remove   - remove custom keyboard\n" +
-                                 "/photo    - send a photo\n" +
-                                 "/request  - request location or contact";
-
-            return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
-                                                        text: usage,
+            return await botClient.SendTextMessageAsync(chatId: chatId,
+                                                        text: message,//message.Text,
                                                         replyMarkup: new ReplyKeyboardRemove());
         }
     }
