@@ -2,8 +2,8 @@
 {
     public interface ICommand
     {
-        string Execute();
-        void ExecuteNext();
+        Task<string> Execute(NewChatMessageEventArgs newChatMessageEventArgs);
+        string ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs);
 
     }
 }

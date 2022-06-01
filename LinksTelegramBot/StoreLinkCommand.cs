@@ -2,12 +2,12 @@
 {
     public class StoreLinkCommand : ICommand
     {
-        public string Execute()
+        public async Task<string> Execute(NewChatMessageEventArgs newChatMessageEventArgs)
         {
             return "StoreLinkCommandExecute";
         }
 
-        public void ExecuteNext()
+        public string ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs)
         {
             throw new NotImplementedException();
         }

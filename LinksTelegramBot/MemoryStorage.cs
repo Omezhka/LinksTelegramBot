@@ -3,14 +3,15 @@
     public class MemoryStorage : IStorage
     {
         private Dictionary<string,string>? _storageLink;
-        public void GetEntity()
+
+        public string GetEntity()
         {
-            throw new NotImplementedException();
+            return $"Some entity";
         }
 
-        public void GetEntityList()
+        public string GetEntityList()
         {
-            throw new NotImplementedException();
+            return $"All entities";
         }
 
         public void StoreEntity(string category, string url)

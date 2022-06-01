@@ -24,6 +24,6 @@ namespace LinksTelegramBot
             return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
                                                         text: usage,
                                                         replyMarkup: new ReplyKeyboardRemove());
-        }
+        } 
     }
 }
