@@ -2,8 +2,8 @@
 {
     public interface IStorage
     {
-        string GetEntity();
-        void StoreEntity(string category, string url);
+        string GetEntity(string category);
+        string StoreEntity(string category, string url);
         string GetEntityList();
     }
 }

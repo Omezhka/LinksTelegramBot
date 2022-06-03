@@ -27,8 +27,9 @@ namespace LinksTelegramBot
            
             if (usersList.ContainsKey(userId))
             {
-               // usersList.Remove(userId,out command);
+                // usersList.Remove(userId,out command);
                 //usersList.Remove(command);
+                
                 return true;
             }
             else return false;

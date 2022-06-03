@@ -4,9 +4,9 @@
     {
         private Dictionary<string,string>? _storageLink;
 
-        public string GetEntity()
+        public string GetEntity(string category)
         {
-            return $"Some entity";
+            return $"Some entity with category {category}";
         }
 
         public string GetEntityList()
@@ -14,9 +14,11 @@
             return $"All entities";
         }
 
-        public void StoreEntity(string category, string url)
+        public string StoreEntity(string category, string url)
         {
-            throw new NotImplementedException();
-        }
+            _storageLink = new Dictionary<string,string>();
+            _storageLink.Add(category, url);
+            return $"URL {_storageLink[category]} with category {_storageLink[url]} successfully added.";
+        } 
     }
 }
