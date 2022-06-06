@@ -2,7 +2,7 @@
 {
     public interface ICommand
     {
-        void Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat);
+        Task Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat);
         void ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat);
 
     }

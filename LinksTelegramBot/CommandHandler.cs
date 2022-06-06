@@ -26,7 +26,7 @@ string? action = null;
                 ICommand? returnCommand = null;
                 string? resultCommand = null;
             //chat.NewChatMessage += OnNewChatMessage;
-            chat.NewChatMessage += (object? sender, NewChatMessageEventArgs newMessageEventArgs) =>
+            chat.NewChatMessage += async (object? sender, NewChatMessageEventArgs newMessageEventArgs) =>
             {
                 Console.WriteLine($"Receive message type from CommandHandler: {newMessageEventArgs.Message.Type}");
                 if (newMessageEventArgs.Message.Type != MessageType.Text)
@@ -40,7 +40,7 @@ string? action = null;
                         // resultCommand = returnCommand.Execute(newMessageEventArgs);
 
                         returnCommand.ExecuteNext(newMessageEventArgs, chat);
-                        CommandRepository.DeletePendingCommand(newMessageEventArgs, returnCommand);
+                        //CommandRepository.DeletePendingCommand(newMessageEventArgs, returnCommand);
                         Console.WriteLine(resultCommand);
                         // chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.ChatId, resultCommand);
                     }
@@ -51,9 +51,9 @@ string? action = null;
                         
                         returnCommand = CommandFactory.CreateCommand(action);
                         CommandRepository.AddPendingCommand(newMessageEventArgs, returnCommand);
-
+                        
                         // resultCommand = returnCommand.Execute(newMessageEventArgs);
-                        returnCommand.Execute(newMessageEventArgs, chat);
+                        await returnCommand.Execute(newMessageEventArgs, chat);
                         Console.WriteLine(resultCommand);
 
                        //chat.PostMessageToChat(newMessageEventArgs.BotClient, newMessageEventArgs.ChatId, resultCommand);

@@ -7,9 +7,9 @@ namespace LinksTelegramBot
     public class GetLinksCommand : ICommand
     {
         readonly IStorage storage = new MemoryStorage();
-        public void Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
+        public async Task Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
         {
-            CommandHandler.AskUser(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
+            await CommandHandler.AskUser(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
         }
 
         public void ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)

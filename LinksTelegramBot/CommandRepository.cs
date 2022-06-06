@@ -12,9 +12,9 @@ namespace LinksTelegramBot
             usersList.Add(newChatMessageEventArgs.Message.From.Id, command);
         }
 
-        public static void DeletePendingCommand(NewChatMessageEventArgs newChatMessageEventArgs, ICommand command)
+        public static void DeletePendingCommand(NewChatMessageEventArgs newChatMessageEventArgs/*, ICommand command*/)
         {
-            usersList.Remove(newChatMessageEventArgs.Message.From.Id, out command);
+            usersList.Remove(newChatMessageEventArgs.Message.From.Id);
         }
 
         public static ICommand GetCommand(NewChatMessageEventArgs newChatMessageEventArgs) {
