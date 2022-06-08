@@ -4,6 +4,6 @@
     {
         string GetEntity(string category);
         string StoreEntity(string category, string url);
-        string GetEntityList();
+        void GetEntityList(NewChatMessageEventArgs newChatMessageEventArgs);
     }
 }

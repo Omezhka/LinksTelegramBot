@@ -6,21 +6,47 @@ namespace LinksTelegramBot
 {
     public class GetLinksCommand : ICommand
     {
-        readonly IStorage storage = new MemoryStorage();
+       
         public async Task Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
         {
-            await CommandHandler.AskUser(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
+            await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
+            await newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.Message.Chat.Id, "Категория?", replyToMessageId: newChatMessageEventArgs.Message.MessageId, replyMarkup: new ForceReplyMarkup { Selective = true });
+            
         }
 
-        public void ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
+        public async Task ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat, IStorage storage)
         {
            
             if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("Категория?"))
             {
+                if (newChatMessageEventArgs.Message.Text.ToLower() == "все")
+                    storage.GetEntityList(newChatMessageEventArgs);
+                else
+                    //storage.GetEntity(newChatMessageEventArgs.Message.Text);
                 chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.GetEntity(newChatMessageEventArgs.Message.Text));
-               
+                CommandRepository.DeletePendingCommand(newChatMessageEventArgs);
             }
             
         }
+
+
+
+        //public async Task Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
+        //{
+        //    await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
+        //    await newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.Message.Chat.Id, "Категория?", replyToMessageId: newChatMessageEventArgs.Message.MessageId, replyMarkup: new ForceReplyMarkup { Selective = true });
+        //}
+
+        //public async Task ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat, IStorage storage)
+        //{
+           
+        //    if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("Категория?"))
+        //    {
+        //        storage.GetEntityList();
+        //        chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.GetEntity(newChatMessageEventArgs.Message.Text));
+        //        CommandRepository.DeletePendingCommand(newChatMessageEventArgs);
+        //    }
+            
+        //}
     }
 }

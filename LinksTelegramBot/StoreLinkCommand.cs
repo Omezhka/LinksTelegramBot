@@ -8,63 +8,31 @@ namespace LinksTelegramBot
     {
         string? category;
         string? url;
-        readonly IStorage storage = new MemoryStorage();
-        //public  void Execute(NewChatMessageEventArgs newChatMessageEventArgs,IChat chat)
-        //{
-        //    // return "StoreLinkCommandExecute";
-        //    chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, "StoreLinkCommandExecute");
-        //}
-
-        //public void ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
-        //{
-        //    chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, "StoreLinkCommandExecuteNext");
-        //}
         
         public async Task Execute(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
         {
-            // IStorage storage = new MemoryStorage();
+            await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
+            await newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.Message.Chat.Id, "Категория?", replyToMessageId: newChatMessageEventArgs.Message.MessageId, replyMarkup: new ForceReplyMarkup { Selective = true }); 
+        }
 
-            //await newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.Message.Chat.Id, "Введите категорию", replyMarkup: new ForceReplyMarkup { Selective = true });
-            // await CommandHandler.AskUser(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
-
-
-
-            await CommandHandler.AskUser(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
-
-           
-                //    Console.WriteLine(newChatMessageEventArgs.Message.Text);
-                //    category = newChatMessageEventArgs.Message.Text; 
-
-                //    }
-                //if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("URL?")) //или текст, который вы отправляли
-                //{
-                //    newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
-                //    chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.StoreEntity(category,newChatMessageEventArgs.Message.Text));
-                //}
-
-            }
-
-            public void ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat)
+        public async Task ExecuteNext(NewChatMessageEventArgs newChatMessageEventArgs, IChat chat, IStorage storage)
         {
-            //IStorage storage = new MemoryStorage();
-            // string url = null;
-
-
-
-            if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("Категория?")) //или текст, который вы отправляли
+            if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("Категория?"))
             {
-                newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
-                CommandHandler.AskUserAboutUrl(newChatMessageEventArgs.BotClient, newChatMessageEventArgs);
                 category = newChatMessageEventArgs.Message.Text;
+
+                await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
+                await newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.Message.Chat.Id, "URL?", replyToMessageId: newChatMessageEventArgs.Message.MessageId, replyMarkup: new ForceReplyMarkup { Selective = true });  
             }
 
-            if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("URL?")) //или текст, который вы отправляли
+            if (newChatMessageEventArgs.Message.ReplyToMessage != null && newChatMessageEventArgs.Message.ReplyToMessage.Text.Contains("URL?"))
             {
                 url = newChatMessageEventArgs.Message.Text;
-                newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
-               // chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.StoreEntity(category, url));
-               // category += " " + newChatMessageEventArgs.Message.Text;
-                chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, $"я сделяль - смотри че ты написал: {category} и {url} ");
+
+                await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
+                await chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.StoreEntity(url, category));
+
+                //   chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, $"Смотри че ты написал: {category} и {url} ");
                 CommandRepository.DeletePendingCommand(newChatMessageEventArgs);
             }
 
