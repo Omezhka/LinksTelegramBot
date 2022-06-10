@@ -30,12 +30,10 @@ namespace LinksTelegramBot
                 url = newChatMessageEventArgs.Message.Text;
 
                 await newChatMessageEventArgs.BotClient.SendChatActionAsync(newChatMessageEventArgs.Message.Chat.Id, ChatAction.Typing);
-                await chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.StoreEntity(url, category));
+                await chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, storage.StoreEntity(category, url));
 
-                //   chat.PostMessageToChat(newChatMessageEventArgs.BotClient, newChatMessageEventArgs.ChatId, $"Смотри че ты написал: {category} и {url} ");
                 CommandRepository.DeletePendingCommand(newChatMessageEventArgs);
             }
-
         }
     }
 }

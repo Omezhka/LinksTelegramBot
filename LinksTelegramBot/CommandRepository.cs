@@ -26,15 +26,8 @@ namespace LinksTelegramBot
             var userId = newChatMessageEventArgs.Message.From.Id;
            
             if (usersList.ContainsKey(userId))
-            {
-                // usersList.Remove(userId,out command);
-                //usersList.Remove(command);
-                
-                return true;
-            }
+                return true;        
             else return false;
         }
-
-
-    }
+   }
 }

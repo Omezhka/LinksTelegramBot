@@ -1,23 +1,39 @@
-﻿using Telegram.Bot;
+﻿using System.Linq;
+using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace LinksTelegramBot
 {
     public class MemoryStorage : IStorage
     {
-        private static Dictionary<string, string>? _storageLink;
+        private static Dictionary<string, List<string>> _storageLink;
 
         public MemoryStorage()
         {
             _storageLink = new(StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public string GetEntity(string category)
+        public void GetEntity(NewChatMessageEventArgs newChatMessageEventArgs, string category)
         {
-            if (category == null || /*!_storageLink.Values.Contains(category) ||*/ !_storageLink.Any(i => i.Value.ToLower().Contains(category)))
-                return "Такой категории нет";
-            else 
-                return $"{_storageLink.FirstOrDefault(x => x.Value == category.ToLower()).Key} с категорией {category}";
+
+            List<string> list = new();
+
+            if(_storageLink.Count == 0)
+            {
+                newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.ChatId, $"В хранилище пока пусто");
+            }
+            if (_storageLink.Count != 0 && _storageLink.ContainsKey(category))
+                list = _storageLink[category].ToList();
+
+            if (!_storageLink.ContainsKey(category))
+                newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.ChatId, $"Такой категории нет");
+            else
+            {
+                foreach (var item in list)
+                {
+                    newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.ChatId, item);
+                }
+            }
         }
 
         public void GetEntityList(NewChatMessageEventArgs newChatMessageEventArgs)
@@ -27,25 +43,35 @@ namespace LinksTelegramBot
             else
             {
                 foreach (var entity in _storageLink)
-                { 
-                    newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.ChatId, $"{entity.Key} с категорией {entity.Value}");
+                {
+                    foreach (var item in entity.Value)
+                    {
+                        newChatMessageEventArgs.BotClient.SendTextMessageAsync(newChatMessageEventArgs.ChatId, $"{item} с категорией {entity.Key}");
+                    }
+                    
                 }
             }
         }
 
-        public string StoreEntity(string url, string category)
+        public string StoreEntity(string category, string url)    
         {
-            if (_storageLink.Keys.Contains(url))
-                return $"URL {_storageLink.FirstOrDefault(x => x.Key == url).Key} уже существует. Воспользуйтесь командой /get_links";
-            //else if (_storageLink.Values.Contains(category))
-            //    return $"Категория {_storageLink.FirstOrDefault(x => x.Value == category).Value} уже существует. Воспользуйтесь командой /get_links";
+            List<string> list = new();
+          
+            if (_storageLink.Count != 0 && _storageLink.ContainsKey(category) && _storageLink[category].Contains(url))
+            {
+                return $"URL {_storageLink[category].Find(x => x == url)} существует. Воспользуйтесь командой /get_links";
+            }
+            else if (_storageLink.ContainsKey(category))
+            {
+                _storageLink[category].Add(url);
+                return $"{_storageLink[category].LastOrDefault(url)} with category {_storageLink.FirstOrDefault(x => x.Key == category).Key} succ added. !!!!";
+            }
             else
             {
-                _storageLink.Add(url, category);
-                return $"URL {_storageLink.FirstOrDefault(x => x.Value == category).Key} с категорией {_storageLink.FirstOrDefault(x => x.Key == url).Value} успешно добавлена"; //{_storageLink[category]}
-            }
-
-            // return $"URL {_storageLink.FirstOrDefault(x => x.Key == category).Value} with category {_storageLink.FirstOrDefault(x => x.Value == url).Key} successfully added."; //{_storageLink[category]}
+                list.Add(url);
+                _storageLink.Add(category, list);
+                return $"{_storageLink[category].LastOrDefault(url)} with category {_storageLink.FirstOrDefault(x => x.Key == category).Key} succ added.";
+            }    
         }
     }
 }

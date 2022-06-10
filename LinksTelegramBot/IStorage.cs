@@ -2,7 +2,7 @@
 {
     public interface IStorage
     {
-        string GetEntity(string category);
+        void GetEntity(NewChatMessageEventArgs newChatMessageEventArgs, string category);
         string StoreEntity(string category, string url);
         void GetEntityList(NewChatMessageEventArgs newChatMessageEventArgs);
     }
