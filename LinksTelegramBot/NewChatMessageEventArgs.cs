@@ -5,8 +5,8 @@ namespace LinksTelegramBot
 {
     public class NewChatMessageEventArgs
     {
-        public Message? Message { get; set; }
-        public ITelegramBotClient? BotClient  {get;set;}
-        public ChatId? ChatId { get; set; }
+        public Message Message { get; set; }
+        public ITelegramBotClient BotClient  {get;set;}
+        public ChatId ChatId { get; set; }
     }
 }

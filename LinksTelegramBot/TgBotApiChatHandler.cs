@@ -24,7 +24,7 @@ namespace LinksTelegramBot
         }
 
         protected virtual void OnNewChatMessage(NewChatMessageEventArgs e) {
-            EventHandler<NewChatMessageEventArgs>? eventHandler = NewChatMessage;
+            EventHandler<NewChatMessageEventArgs> eventHandler = NewChatMessage;
             if (eventHandler != null)
                 eventHandler(this, e);
         }

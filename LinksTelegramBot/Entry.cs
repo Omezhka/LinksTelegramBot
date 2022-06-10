@@ -8,7 +8,6 @@
             IStorage storage = new MemoryStorage();
             chat.Start();
             CommandHandler commandHandler = new(chat,storage);
-           
         }
         public void Stop()
         {
