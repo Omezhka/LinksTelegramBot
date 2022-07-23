@@ -1,0 +1,42 @@
+﻿@model TgBot
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Категории и URL</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Категория
+            </th>
+            <th>
+                Url
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Links)
+        {
+            <tr>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                @* <td>
+            @Html.DisplayFor(modelItem => item.UserId)
+            </td>*@
+                @*<td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
